@@ -1,0 +1,203 @@
+-- Create Suppliers table
+CREATE TABLE Suppliers (
+  SNo INT PRIMARY KEY,
+  Sname VARCHAR(50),
+  Status INT,
+  SCity VARCHAR(50)
+);
+
+-- Insert data into Suppliers table
+INSERT INTO Suppliers (SNo, Sname, Status, SCity)
+VALUES
+  (1, 'Supplier 1', 10, 'Paris'),
+  (2, 'Supplier 2', 25, 'London'),
+  (3, 'Supplier 3', 30, 'Paris'),
+  (4, 'Supplier 4', 15, 'Berlin'),
+  (5, 'Supplier 5', 40, 'Paris');
+
+-- Create Parts table
+CREATE TABLE Parts (
+  PNo INT PRIMARY KEY,
+  Pname VARCHAR(50),
+  Colour VARCHAR(20),
+  Weight DECIMAL(10, 2),
+  City VARCHAR(50)
+);
+
+-- Insert data into Parts table
+INSERT INTO Parts (PNo, Pname, Colour, Weight, City)
+VALUES
+  (1, 'Part 1', 'Red', 1.5, 'Paris'),
+  (2, 'Part 2', 'Blue', 2.3, 'London'),
+  (3, 'Part 3', 'Green', 0.8, 'Paris'),
+  (4, 'Part 4', 'Yellow', 3.1, 'Berlin'),
+  (5, 'Part 5', 'Black', 1.2, 'Paris');
+
+-- Create Project table
+CREATE TABLE Project (
+  JNo INT PRIMARY KEY,
+  Jname VARCHAR(50),
+  Jcity VARCHAR(50)
+);
+
+-- Insert data into Project table
+INSERT INTO Project (JNo, Jname, Jcity)
+VALUES
+  (1, 'Project 1', 'Paris'),
+  (2, 'Project 2', 'London'),
+  (3, 'Project 3', 'Berlin'),
+  (4, 'Project 4', 'Paris'),
+  (5, 'Project 5', 'London');
+
+-- Create Shipment table
+CREATE TABLE Shipment (
+  Sno INT,
+  Pno INT,
+  Jno INT,
+  Quantity INT,
+  PRIMARY KEY (Sno, Pno, Jno),
+  FOREIGN KEY (Sno) REFERENCES Suppliers(SNo),
+  FOREIGN KEY (Pno) REFERENCES Parts(PNo),
+  FOREIGN KEY (Jno) REFERENCES Project(JNo)
+);
+
+-- Insert data into Shipment table
+INSERT INTO Shipment (Sno, Pno, Jno, Quantity)
+VALUES
+  (1, 1, 1, 10),
+  (2, 2, 2, 5),
+  (3, 3, 3, 8),
+  (4, 4, 4, 12),
+  (5, 5, 5, 3);
+
+
+**********************************************************************************************************************
+**********************************************************************************************************************
+**********************************************************************************************************************
+
+A)
+
+a) Primary and foreign keys in the tables:
+
+Suppliers table:
+Primary Key: SNo
+Parts table:
+Primary Key: PNo
+Project table:
+Primary Key: JNo
+Shipment table:
+Primary Key: Sno, Pno, Jno
+Foreign Key: Sno references Suppliers(SNo)
+Foreign Key: Pno references Parts(PNo)
+Foreign Key: Jno references Project(JNo)
+
+***************************************************************************************************
+
+B)
+
+SELECT SNo
+FROM Suppliers
+WHERE SCity = 'Paris' AND Status > 20;
+
+***************************************************************************************************
+
+C)
+
+SELECT Suppliers.*
+FROM Suppliers
+JOIN Shipment ON Suppliers.SNo = Shipment.Sno
+JOIN Parts ON Parts.PNo = Shipment.Pno
+WHERE Parts.Pname = 'Part 2'
+ORDER BY Suppliers.SNo;
+
+****************************************************************************************************
+
+D)
+
+
+SELECT Suppliers.Sname
+FROM Suppliers
+WHERE Suppliers.SNo NOT IN (
+  SELECT
+
+****************************************************************************************************
+E)
+
+SELECT Shipment.*, SUM(Parts.Weight * Shipment.Quantity) AS TotalWeight
+FROM Shipment
+JOIN Parts ON Parts.PNo = Shipment.Pno
+GROUP BY Shipment.Sno, Shipment.Pno, Shipment.Jno, Shipment.Quantity;
+
+
+******************************************************************************************************
+
+F)
+
+SELECT *
+FROM Shipment
+WHERE Quantity BETWEEN 300 AND 750;
+
+******************************************************************************************************
+
+G)
+
+SELECT Parts.PNo
+FROM Parts
+LEFT JOIN Shipment ON Parts.PNo = Shipment.Pno
+WHERE Parts.Weight > 16 OR Shipment.Sno = 2;
+
+
+*****************************************************************************************************
+
+H)
+
+SELECT City
+FROM Parts
+WHERE Colour = 'Red'
+GROUP BY City
+HAVING COUNT(*) > 5;
+
+
+*******************************************************************************************************
+
+I)
+
+SELECT Parts.*
+FROM Parts
+JOIN Shipment ON Parts.PNo = Shipment.Pno
+JOIN Suppliers ON Suppliers.SNo = Shipment.Sno
+WHERE Suppliers.SCity = 'London';
+
+
+*******************************************************************************************************
+
+J)
+
+SELECT Parts.PNo
+FROM Parts
+JOIN Shipment ON Parts.PNo = Shipment.Pno
+JOIN Suppliers ON Suppliers
+
+
+**********************************************************************************************************
+
+K)
+
+SELECT COUNT(DISTINCT Shipment.Jno) AS TotalProjects
+FROM Shipment
+WHERE Shipment.Sno = 1;
+
+
+**********************************************************************************************************
+
+L)
+
+SELECT SUM(Shipment.Quantity) AS TotalQuantity
+FROM Shipment
+WHERE
+
+
+
+
+
+

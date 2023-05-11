@@ -1,0 +1,198 @@
+-- Create EMPLOYEE table
+CREATE TABLE EMPLOYEE (
+  Person_Name VARCHAR(255) PRIMARY KEY,
+  Street VARCHAR(255),
+  City VARCHAR(255)
+);
+
+-- Insert sample data into EMPLOYEE table
+INSERT INTO EMPLOYEE (Person_Name, Street, City)
+VALUES
+  ('John Doe', '123 Main St', 'New York'),
+  ('Jane Smith', '456 Elm St', 'Los Angeles'),
+  ('David Johnson', '789 Oak St', 'Chicago'),
+  ('Sarah Williams', '321 Pine St', 'Houston'),
+  ('Michael Brown', '555 Maple St', 'San Francisco');
+
+-- Create WORKS table
+CREATE TABLE WORKS (
+  Person_Name VARCHAR(255),
+  Company_Name VARCHAR(255),
+  Salary DECIMAL(10, 2),
+  PRIMARY KEY (Person_Name, Company_Name),
+  FOREIGN KEY (Person_Name) REFERENCES EMPLOYEE(Person_Name),
+  FOREIGN KEY (Company_Name) REFERENCES COMPANY(Company_Name)
+);
+
+-- Insert sample data into WORKS table
+INSERT INTO WORKS (Person_Name, Company_Name, Salary)
+VALUES
+  ('John Doe', 'Company A', 50000),
+  ('John Doe', 'Company B', 60000),
+  ('Jane Smith', 'Company B', 55000),
+  ('David Johnson', 'Company C', 70000),
+  ('Sarah Williams', 'Company A', 60000);
+
+-- Create COMPANY table
+CREATE TABLE COMPANY (
+  Company_Name VARCHAR(255) PRIMARY KEY,
+  City VARCHAR(255)
+);
+
+-- Insert sample data into COMPANY table
+INSERT INTO COMPANY (Company_Name, City)
+VALUES
+  ('Company A', 'New York'),
+  ('Company B', 'Los Angeles'),
+  ('Company C', 'Chicago'),
+  ('Company D', 'Houston'),
+  ('Company E', 'San Francisco');
+
+-- Create MANAGES table
+CREATE TABLE MANAGES (
+  Person_Name VARCHAR(255),
+  Manager_Name VARCHAR(255),
+  PRIMARY KEY (Person_Name),
+  FOREIGN KEY (Person_Name) REFERENCES EMPLOYEE(Person_Name),
+  FOREIGN KEY (Manager_Name) REFERENCES EMPLOYEE(Person_Name)
+);
+
+-- Insert sample data into MANAGES table
+INSERT INTO MANAGES (Person_Name, Manager_Name)
+VALUES
+  ('John Doe', 'Jane Smith'),
+  ('Jane Smith', 'David Johnson'),
+  ('David Johnson', 'Sarah Williams'),
+  ('Sarah Williams', 'John Doe'),
+  ('Michael Brown', 'Jane Smith');
+
+*********************************************************************************************************
+
+Find all employees who work for 'Company A':
+
+SELECT E.Person_Name
+FROM EMPLOYEE E
+JOIN WORKS W ON E.Person_Name = W.Person_Name
+WHERE W.Company_Name = 'Company A';
+
+*********************************************************************************************************
+
+Find all employees who earn a salary greater than $50,000:
+
+SELECT E.Person_Name
+FROM EMPLOYEE E
+JOIN WORKS W ON E.Person_Name = W.Person_Name
+WHERE W.Salary > 50000;
+
+*********************************************************************************************************
+
+Find the managers who manage employees at 'Company B':
+
+SELECT M.Manager_Name
+FROM MANAGES M
+JOIN WORKS W ON M.Person_Name = W.Person_Name
+JOIN COMPANY C ON W.Company_Name = C.Company_Name
+WHERE C.Company_Name = 'Company B';
+
+********************************************************************************************************
+
+Find the average salary of employees at 'Company C':
+
+SELECT AVG(W.Salary) AS AverageSalary
+FROM WORKS W
+JOIN COMPANY C ON W.Company_Name = C.Company_Name
+WHERE C.Company_Name = 'Company C';
+
+******************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************
+
+
+
+
+a)
+
+
+EMPLOYEE:
+
+Primary Key: Person_Name
+WORKS:
+
+Primary Key: (Person_Name, Company_Name)
+Foreign Key: Person_Name references EMPLOYEE(Person_Name)
+Foreign Key: Company_Name references COMPANY(Company_Name)
+COMPANY:
+
+Primary Key: Company_Name
+MANAGES:
+
+Primary Key: (Person_Name, Manager_Name)
+Foreign Key: Person_Name references EMPLOYEE(Person_Name)
+Foreign Key: Manager_Name references EMPLOYEE(Person_Name)
+
+*************************************************************************************
+
+b)
+
+
+ALTER TABLE EMPLOYEE
+ADD email VARCHAR(20);
+
+*************************************************************************************
+
+c)
+
+SELECT DISTINCT M.Manager_Name
+FROM MANAGES M
+JOIN WORKS W1 ON M.Person_Name = W1.Person_Name AND W1.Company_Name = 'Samba Bank'
+JOIN WORKS W2 ON M.Person_Name = W2.Person_Name AND W2.Company_Name = 'NCB Bank';
+
+
+*************************************************************************************
+
+d)
+
+SELECT E.Person_Name, E.Street, E.City, W.Salary
+FROM EMPLOYEE E
+JOIN WORKS W ON E.Person_Name = W.Person_Name
+JOIN COMPANY C ON W.Company_Name = C.Company_Name
+WHERE W.Company_Name = 'Samba Bank' AND W.Salary > 10000;
+
+*************************************************************************************
+
+e)
+
+
+SELECT E.Person_Name
+FROM EMPLOYEE E
+JOIN WORKS W ON E.Person_Name = W.Person_Name
+JOIN COMPANY C ON W.Company_Name = C.Company_Name
+WHERE E.City = C.City;
+
+
+*************************************************************************************
+
+f)
+
+SELECT W.Company_Name, MAX(W.Salary) AS HighestSalary, MIN(W.Salary) AS LowestSalary, AVG(W.Salary) AS AverageSalary
+FROM WORKS W
+GROUP BY W.Company_Name;
+
+
+*************************************************************************************
+
+g)
+
+SELECT W.Company_Name, SUM(W.Salary) AS TotalSalary, COUNT(*) AS NumberOfEmployees
+FROM WORKS W
+GROUP BY W.Company_Name;
+
+
+*************************************************************************************
+
+h)
+
+SELECT W.Company_Name
+FROM WORKS W
+GROUP BY W.Company_Name
+HAVING W.Salary = (SELECT MAX(Salary) FROM WORKS);
+
+

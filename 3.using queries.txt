@@ -1,0 +1,118 @@
+a)
+
+
+-- Create Customer table
+CREATE TABLE Customer (
+  CustID INT PRIMARY KEY,
+  email VARCHAR(255),
+  Name VARCHAR(255),
+  Phone VARCHAR(255),
+  ReferrerID INT,
+  FOREIGN KEY (ReferrerID) REFERENCES Customer(CustID)
+);
+
+-- Insert sample data into Customer table
+INSERT INTO Customer (CustID, email, Name, Phone, ReferrerID)
+VALUES
+  (1, 'john@example.com', 'John Doe', '555-1234', NULL),
+  (2, 'jane@example.com', 'Jane Smith', '555-5678', 1),
+  (3, 'mark@example.com', 'Mark Johnson', '555-9012', 1),
+  (4, 'lisa@example.com', 'Lisa Davis', '555-3456', 2),
+  (5, 'mike@example.com', 'Mike Brown', '555-7890', 2);
+
+-- Create Bicycle table
+CREATE TABLE Bicycle (
+  BicycleID INT PRIMARY KEY,
+  DatePurchased DATE,
+  Color VARCHAR(255),
+  CustID INT,
+  ModelNo INT,
+  FOREIGN KEY (CustID) REFERENCES Customer(CustID),
+  FOREIGN KEY (ModelNo) REFERENCES BicycleModel(ModelNo)
+);
+
+-- Insert sample data into Bicycle table
+INSERT INTO Bicycle (BicycleID, DatePurchased, Color, CustID, ModelNo)
+VALUES
+  (1, '2023-01-01', 'Red', 1, 1),
+  (2, '2023-02-15', 'Blue', 2, 2),
+  (3, '2023-03-10', 'Green', 3, 1),
+  (4, '2023-04-05', 'Red', 4, 3),
+  (5, '2023-05-02', 'Red', 5, 2);
+
+-- Create BicycleModel table
+CREATE TABLE BicycleModel (
+  ModelNo INT PRIMARY KEY,
+  Manufacturer VARCHAR(255),
+  Style VARCHAR(255)
+);
+
+-- Insert sample data into BicycleModel table
+INSERT INTO BicycleModel (ModelNo, Manufacturer, Style)
+VALUES
+  (1, 'Honda', 'Mountain'),
+  (2, 'Honda', 'Road'),
+  (3, 'Trek', 'Hybrid'),
+  (4, 'Giant', 'Electric'),
+  (5, 'Specialized', 'BMX');
+
+-- Create Service table
+CREATE TABLE Service (
+  StartDate DATE,
+  BicycleID INT,
+  EndDate DATE,
+  FOREIGN KEY (BicycleID) REFERENCES Bicycle(BicycleID)
+);
+
+-- Insert sample data into Service table
+INSERT INTO Service (StartDate, BicycleID, EndDate)
+VALUES
+  ('2023-01-05', 1, '2023-01-10'),
+  ('2023-03-12', 2, '2023-03-15'),
+  ('2023-04-08', 4, '2023-04-15'),
+  ('2023-05-05', 3, '2023-05-10'),
+  ('2023-05-10', 5, '2023-05-15');
+
+
+*********************************************************************************************
+
+b)
+
+SELECT C.Name
+FROM Customer C
+JOIN Bicycle B ON C.CustID = B.CustID
+JOIN BicycleModel BM ON B.ModelNo = BM.ModelNo
+WHERE BM.Manufacturer = 'Honda';
+``
+
+
+*********************************************************************************************
+
+c)
+
+SELECT B.*
+FROM Bicycle B
+JOIN Customer C ON B.CustID = C.CustID
+JOIN Customer CR ON C.ReferrerID = CR.CustID
+WHERE CR.Name = 'CS';
+
+
+*********************************************************************************************
+
+d)
+
+SELECT DISTINCT BM.Manufacturer
+FROM Bicycle B
+JOIN BicycleModel BM ON B.ModelNo = BM.ModelNo
+WHERE B.Color = 'Red';
+
+
+*********************************************************************************************
+
+e)
+
+
+SELECT DISTINCT BM.ModelNo, BM.Manufacturer, BM.Style
+FROM Bicycle B
+JOIN BicycleModel BM ON B.ModelNo = BM.ModelNo
+JOIN Service S ON B.BicycleID = S.BicycleID;

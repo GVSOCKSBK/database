@@ -1,0 +1,83 @@
+a)
+
+-- Create the LibraryBooks table
+CREATE TABLE LibraryBooks (
+  AccessionNumber INT PRIMARY KEY,
+  Title VARCHAR(255),
+  Author VARCHAR(255),
+  Department VARCHAR(255),
+  PurchaseDate DATE,
+  Price DECIMAL(10, 2)
+);
+
+-- Insert records into LibraryBooks table
+INSERT INTO LibraryBooks (AccessionNumber, Title, Author, Department, PurchaseDate, Price)
+VALUES
+  (1, 'Introduction to Algorithms', 'Cormen et al.', 'CS', '2022-05-01', 800.00),
+  (2, 'Discrete Maths', 'Rosen', 'Mathematics', '2023-01-15', 600.00),
+  (3, 'Data Structures and Algorithms', 'Weiss', 'CS', '2021-07-19', 400.00),
+  (4, 'The C Programming Language', 'Kernighan & Ritchie', 'CS', '2020-11-30', 300.00),
+  (5, 'Algorithms', 'Sedgewick', 'CS', '2023-03-10', 700.00);
+
+-- Create the IssuedBooks table
+CREATE TABLE IssuedBooks (
+  AccessionNumber INT,
+  Borrower VARCHAR(255),
+  FOREIGN KEY (AccessionNumber) REFERENCES LibraryBooks(AccessionNumber)
+);
+
+-- Insert records into IssuedBooks table
+INSERT INTO IssuedBooks (AccessionNumber, Borrower)
+VALUES
+  (2, 'John Smith'),
+  (3, 'Jane Doe'),
+  (4, 'Alice Brown'),
+  (5, 'David Green'),
+  (1, 'Emily White');
+
+
+*************************************************************************************************
+
+b)
+
+--delete database system concepts --
+DELETE FROM LibraryBooks
+WHERE Title = 'Database System Concepts';
+
+***********************************************************************************************
+
+c)
+
+--change to discrete maths to cs--
+UPDATE LibraryBooks
+SET Department = 'CS'
+WHERE Title = 'Discrete Maths';
+
+**************************************************************************************************
+
+d)
+
+--cs--
+SELECT *
+FROM LibraryBooks
+WHERE Department = 'CS';
+
+
+**************************************************************************************************
+e)
+
+
+SELECT LibraryBooks.*
+FROM LibraryBooks
+INNER JOIN IssuedBooks ON LibraryBooks.AccessionNumber = IssuedBooks.AccessionNumber
+WHERE LibraryBooks.Department = 'CS';
+
+
+**************************************************************************************************
+g)
+
+SELECT *
+FROM LibraryBooks
+WHERE Price < 500 OR (PurchaseDate >= '1999-01-01' AND PurchaseDate <= '2004-01-01');
+
+

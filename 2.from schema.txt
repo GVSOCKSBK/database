@@ -1,0 +1,104 @@
+a)
+
+-- Create Students table
+CREATE TABLE Students (
+    CollegeRollNumber INT PRIMARY KEY,
+    Name VARCHAR(100),
+    DateOfBirth DATE,
+    Address VARCHAR(200),
+    MarksPercentage INT,
+    PhoneNumber VARCHAR(20)
+);
+
+-- Create Papers table
+CREATE TABLE Papers (
+    PaperCode VARCHAR(10) PRIMARY KEY,
+    PaperName VARCHAR(100)
+);
+
+-- Create AcademicAttendance table
+CREATE TABLE AcademicAttendance (
+    CollegeRollNumber INT,
+    PaperCode VARCHAR(10),
+    Attendance INT,
+    Marks INT,
+    PRIMARY KEY (CollegeRollNumber, PaperCode),
+    FOREIGN KEY (CollegeRollNumber) REFERENCES Students(CollegeRollNumber),
+    FOREIGN KEY (PaperCode) REFERENCES Papers(PaperCode)
+);
+
+-- Insert records into Students table
+INSERT INTO Students (CollegeRollNumber, Name, DateOfBirth, Address, MarksPercentage, PhoneNumber)
+VALUES
+    (1, 'John Doe', '2000-01-01', 'Delhi', 80, '1234567890'),
+    (2, 'Jane Smith', '2001-02-02', 'Mumbai', 70, '9876543210'),
+    (3, 'Alice Johnson', '2002-03-03', 'Delhi', 85, '1112223334'),
+    (4, 'Bob Williams', '2003-04-04', 'Kolkata', 75, '4445556667'),
+    (5, 'Eva Brown', '2004-05-05', 'Delhi', 90, '7778889990');
+
+-- Insert records into Papers table
+INSERT INTO Papers (PaperCode, PaperName)
+VALUES
+    ('P1', 'Paper 1'),
+    ('P2', 'Paper 2'),
+    ('P3', 'Paper 3'),
+    ('P4', 'Paper 4'),
+    ('P5', 'Paper 5');
+
+-- Insert records into AcademicAttendance table
+INSERT INTO AcademicAttendance (CollegeRollNumber, PaperCode, Attendance, Marks)
+VALUES
+    (1, 'P1', 80, 70),
+    (1, 'P2', 90, 80),
+    (1, 'P3', 85, 75),
+    (2, 'P1', 75, 65),
+    (2, 'P2', 80, 70),
+    (2, 'P3', 90, 80),
+    (3, 'P1', 90, 80),
+    (3, 'P2', 95, 90),
+    (3, 'P3', 80, 70),
+    (4, 'P1', 80, 70),
+    (4, 'P2', 85, 75),
+    (4, 'P3', 75, 65),
+    (5, 'P1', 90, 80),
+    (5, 'P2', 95, 90),
+    (5, 'P3', 85, 75);
+
+********************************************************************************************
+
+b)
+
+SELECT aa.*, s.Name
+FROM AcademicAttendance aa
+JOIN Students s ON aa.RollNumber = s.RollNumber
+WHERE aa.Attendance > 75 AND aa.Marks > 60 AND aa.PaperCode = 'P2';
+
+
+***********************************************************************************************
+
+c)
+
+SELECT s.*
+FROM Students s
+JOIN AcademicAttendance aa ON s.RollNumber = aa.RollNumber
+WHERE s.Address LIKE '%Delhi%' AND aa.Marks > 60 AND aa.PaperCode = 'P1';
+
+
+*********************************************************************************************
+
+d)
+
+
+SELECT s.Name, SUM(aa.Attendance) AS TotalAttendance, SUM(aa.Marks) AS TotalMarks
+FROM Students s
+JOIN AcademicAttendance aa ON s.RollNumber = aa.RollNumber
+GROUP BY s.Name;
+
+
+*********************************************************************************************
+
+e)
+
+SELECT s.Name
+FROM Students s
+JOIN Academic
